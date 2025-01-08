@@ -1,55 +1,52 @@
 import express from 'express';
 import recipes from './data.js';
+import mongoose from 'mongoose';
+import Recipe from './models/recipe.js';
 
 const app = express();
 
-
 app.use(express.json());
 
+app.post('/recipes', async function (req, res) {
+    const newRecipe = await Recipe.create(req.body);
 
-app.get('/recipes', function (req, res) {
-    res.send(recipes);
+    console.log(newRecipe);
+    res.status(201).send(newRecipe);
 });
 
+app.get('/recipes', async function (req, res) {
+    const allRecipes = await Recipe.find();
+    res.send(allRecipes);
+});
 
-app.get('/recipes/:name', function (req, res) {
-    const recipeName = req.params.name;
-    const recipe = recipes.find((currentRecipe) => {
-        return currentRecipe.name.toLowerCase() === recipeName.toLowerCase();
-    });
+app.get('/recipes/:name', async function (req, res) {
+    const recipe = await Recipe.findOne({ name: req.params.name })
 
     res.send(recipe);
 });
 
+app.delete('/recipes/:id', async function (req, res) {
+    const recipeId = req.params.id;
 
-app.post('/recipes', function (req, res) {
-    const newRecipe = req.body;
-    recipes.push(newRecipe);
-    res.status(201).send(newRecipe);
+    await Recipe.findByIdAndDelete(recipeId);
+
+    res.sendStatus(204);
 });
 
-
-app.delete('/recipes/:id', function (req, res) {
+app.put('/recipes/:id', async function (req, res) {
     const recipeId = req.params.id;
-    const recipeIndex = recipes.findIndex(currentRecipe => currentRecipe.id === recipeId);
-    recipes.splice(recipeIndex, 1);
-});
+    
+    const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId);
 
-
-app.put('/recipes/:id', function (req, res) {
-    const recipeId = req.params.id;
-    const updateRecipe = req.body;
-
-    const recipeIndex = recipes.findIndex((currentRecipe) => {
-        return currentRecipe.id === recipeId;
-    });
-
-    recipes[recipeIndex] = updateRecipe;
-
-    res.send(updateRecipe);
+    res.send(updatedRecipe);
 });
 
 
 app.listen(3000, () => {
     console.log('Server is running on port 3000!');
 });
+
+
+const url = 'mongodb://127.0.0.1:27017/';
+const dbname = 'recipes-db';
+mongoose.connect(`${url}${dbname}`);
