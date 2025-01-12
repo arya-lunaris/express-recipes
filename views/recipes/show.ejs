@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>Show Recipe</title>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="container">
+        <div class="recipe-card">
+            <div class="recipe-card-content">
+                <h1 class="recipe-card-title">
+                    <%= recipe.name %>
+                </h1>
+                
+                <ul class="recipe-ingredients">
+                    <% recipe.ingredients.forEach((ingredient)=> { %>
+                        <li><%= ingredient %></li>
+                    <% }) %>
+                </ul>
+                
+                <p class="recipe-instructions">
+                    <%= recipe.instructions %>
+                </p>
+
+                <a href="/recipes/update/<%=recipe._id%>" class="edit-recipe-button">Edit Recipe</a>
+                
+                <form action="/recipes/<%= recipe._id %>" method="POST" class="delete-form">
+                    <button class="delete-button" type="submit">
+                        Delete <%= recipe.name %>
+                    </button>
+                    <input type="hidden" name="_method" value="DELETE">
+                </form>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

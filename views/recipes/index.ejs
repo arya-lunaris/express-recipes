@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <title>All Recipes</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+
+    <h1>All Recipes</h1>
+    <img
+      class="recipe-pic"
+      src="https://cdn.pixabay.com/photo/2014/12/21/23/28/recipe-575434_1280.png"
+      alt="chef cooking illustration"
+    />
+
+    <div class="recipe-list">
+        <% allRecipes.forEach((recipe) => { %>
+            <div class="recipe-card">
+                <div class="recipe-card-content">
+                    <h2><%= recipe.name %></h2>
+                    <p><%= recipe.description %></p>
+                    <a href="/recipes/<%= recipe.name %>">View Recipe</a>
+                </div>
+            </div>
+        <% }) %>
+    </div>
+</body>
+</html>

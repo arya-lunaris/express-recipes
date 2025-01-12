@@ -1,37 +1,64 @@
 import express from 'express';
 import Recipe from '../models/recipe.js';
 
+
 const router = express.Router();
+
+router.route('/home').get(async function (req, res, next) {
+    try {
+        res.render('home.ejs');
+    } catch (e) {
+        next(e);
+    }
+});
 
 router.route('/recipes').post(async function (req, res, next) {
     try {
+        if (req.body.ingredients) {
+            req.body.ingredients = req.body.ingredients.split(',').map(ingredient => ingredient.trim());
+        }
         const newRecipe = await Recipe.create(req.body);
-        res.status(201).send(newRecipe);
+        res.redirect('/recipes');
     } catch (e) {
-        next(e);  
+        next(e);
     }
 });
 
 router.route('/recipes').get(async function (req, res, next) {
     try {
         const allRecipes = await Recipe.find();
-        res.send(allRecipes);
+        res.render('recipes/index.ejs', {
+            allRecipes: allRecipes
+        })
     } catch (e) {
-        next(e);  
+        next(e);
     }
 });
 
+router.route("/recipes/new").get(async function (req, res, next) {
+    try {
+        res.render("recipes/new.ejs");
+    } catch (e) {
+        next(e);
+    }
+});
+
+
 router.route('/recipes/:name').get(async function (req, res, next) {
     try {
-        const recipe = await Recipe.findOne({ name: req.params.name });
+        const recipeName = { name: req.params.name }
+        const recipe = await Recipe.findOne(recipeName);
         if (!recipe) {
             return res.status(404).send({ message: "Recipe not found. Please check the name and try again!" });
         }
-        res.send(recipe);
+        res.render('recipes/show.ejs', {
+            recipe: recipe
+        });
     } catch (e) {
-        next(e); 
+        next(e);
     }
 });
+
 
 router.route('/recipes/:id').delete(async function (req, res, next) {
     try {
@@ -40,23 +67,38 @@ router.route('/recipes/:id').delete(async function (req, res, next) {
         if (!deletedRecipe) {
             return res.status(404).send({ message: "Recipe not found. Please check the ID and try again!" });
         }
-        res.sendStatus(204);
+        res.redirect('/recipes');
     } catch (e) {
-        next(e); 
+        next(e);
     }
 });
 
+router.route('/recipes/update/:id').get(async function (req, res, next) {
+    try {
+        const recipe = await Recipe.findById(req.params.id).exec()
+        res.render('recipes/edit.ejs', {
+            recipe: recipe
+        })
+    } catch (e) {
+        next(e)
+    }
+})
+
 router.route('/recipes/:id').put(async function (req, res, next) {
     try {
+        if (req.body.ingredients) {
+            req.body.ingredients = req.body.ingredients.split(',').map(ingredient => ingredient.trim());
+        }
         const recipeId = req.params.id;
         const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, req.body, { new: true });
         if (!updatedRecipe) {
             return res.status(404).send({ message: "Recipe not found. Please check the ID and try again!" });
         }
-        res.send(updatedRecipe);
+        res.redirect('/recipes');
     } catch (e) {
-        next(e);  
+        next(e);
     }
 });
+
 
 export default router;
