@@ -62,6 +62,7 @@ router.route('/recipes/:name').get(async function (req, res, next) {
 
 router.route('/recipes/:id').delete(async function (req, res, next) {
     try {
+        console.log("DELETE request for:", req.params.id);
         const recipeId = req.params.id;
         const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
         if (!deletedRecipe) {
@@ -73,7 +74,7 @@ router.route('/recipes/:id').delete(async function (req, res, next) {
     }
 });
 
-router.route('/recipes/update/:id').get(async function (req, res, next) {
+router.route('/recipes/edit/:id').get(async function (req, res, next) {
     try {
         const recipe = await Recipe.findById(req.params.id).exec()
         res.render('recipes/edit.ejs', {
