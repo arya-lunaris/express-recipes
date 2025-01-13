@@ -1,5 +1,3 @@
-// This is the middleware/logger.js file for logging information about requests.
-
 function buildObjectLog(obj) {
     if (!Object.keys(obj).length) return 'None'
     return JSON.stringify(obj, null, 4)
