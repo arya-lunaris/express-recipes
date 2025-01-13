@@ -1,4 +1,6 @@
 import mongoose from 'mongoose';
+import mongooseUniqueValidator from 'mongoose-unique-validator';
+import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -17,5 +19,15 @@ const userSchema = new mongoose.Schema({
     }
 });
 
+userSchema.pre('save', function (next) {
+    this.password = bcrypt.hashSync(this.password, bcrypt.genSaltSync())
+    next()
+})
 
-export default mongoose.model('User', userSchema);
+userSchema.methods.isPasswordValid = function (plaintextPassword) {
+    return bcrypt.compareSync(plaintextPassword, this.password)
+}
+
+    userSchema.plugin(mongooseUniqueValidator)
+
+    export default mongoose.model('User', userSchema);

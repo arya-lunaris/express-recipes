@@ -1,8 +1,7 @@
-// This program is responsible for adding (seeding) data to our database
-
 import mongoose from "mongoose";
 import Recipe from '../models/recipe.js';
 import recipes from '../data.js';
+import user from '../models/user.js'
 
 async function seed() {
     console.log("Hello Seed");

@@ -9,16 +9,18 @@ import userController from './controllers/userController.js';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
+
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
-app.use('/user', userController);
+
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(methodOverride('_method'));
 app.use(logger);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', recipeController);
+app.use('/user', userController);
 app.use(errorHandler);
 
 app.get("/", async (req, res) => {
