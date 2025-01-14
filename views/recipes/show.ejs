@@ -28,13 +28,16 @@
                     <%= recipe.instructions %>
                 </p>
 
-                <a href="/recipes/edit/<%=recipe._id%>" class="edit-recipe-button">Edit Recipe</a>
 
-                <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST" class="delete-form">
-                    <button class="delete-button" type="submit">
-                        Delete <%= recipe.name %>
-                    </button>
-                </form>
+                <% if (user) { %>
+                    <a href="/recipes/edit/<%=recipe._id%>" class="edit-recipe-button">Edit Recipe</a>
+
+                    <form action="/recipes/<%= recipe._id %>?_method=DELETE" method="POST" class="delete-form">
+                        <button class="delete-button" type="submit">
+                            Delete <%= recipe.name %>
+                        </button>
+                    </form>
+                <% } %>
             </div>
         </div>
     </div>
@@ -42,3 +45,4 @@
 </body>
 
 </html>
+

@@ -61,6 +61,10 @@ nav .signup {
     margin-left: auto;
 }
 
+nav .logout {
+    margin-left: auto;
+}
+
 .recipe-pic {
     display: block;
     margin: 0 auto;

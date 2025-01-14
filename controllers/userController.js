@@ -51,12 +51,11 @@ router.post('/login', async (req, res, next) => {
             return res.status(401).send({ message: "Login unsuccessful" })
         }
         req.session.user = user;
-        res.send({ message: "Login successful!" })
+        res.redirect('/home')
     } catch (e) {
         next(e)
     }
 })
-
 
 
 export default router;
