@@ -11,7 +11,7 @@
     <%- include('../partials/nav') %>
 
     <h1>User Info</h1>
-    <form action="/user/profile" method="POST">
+    <form action="/user/profile" method="POST" class="form">
         <label for="username">Change Username:</label>
         <input type="text" id="username" name="username" value="<%= user.username %>">
     
