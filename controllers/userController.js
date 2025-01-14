@@ -25,12 +25,12 @@ router.route('/signup').post(async function (req, res, next) {
             });
         }
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return res.status(400).send({
-                message: 'Invalid email format.'
-            });
-        }
+        // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        // if (!emailRegex.test(email)) {
+        //     return res.status(400).send({
+        //         message: 'Invalid email format.'
+        //     });
+        // }
 
         await User.create(req.body);
 

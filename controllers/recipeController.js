@@ -26,6 +26,9 @@ router.route('/recipes').post(async function (req, res, next) {
         if (req.body.ingredients) {
             req.body.ingredients = req.body.ingredients.split(',').map(ingredient => ingredient.trim());
         }
+
+        req.body.user = req.session.user;
+
         const newRecipe = await Recipe.create(req.body);
         res.redirect('/recipes');
     } catch (e) {
@@ -35,7 +38,7 @@ router.route('/recipes').post(async function (req, res, next) {
 
 router.route('/recipes').get(async function (req, res, next) {
     try {
-        const allRecipes = await Recipe.find();
+        const allRecipes = await Recipe.find().populate('user');
         res.render('recipes/index.ejs', {
             allRecipes: allRecipes
         })
@@ -77,9 +80,18 @@ router.route('/recipes/:id').delete(async function (req, res, next) {
          }
 
         const recipeId = req.params.id;
-        const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
+        const recipe = await Recipe.findById(recipeId).populate('user');
+        
+        console.log(recipe, req.session)
+        
+        if (!recipe.user._id.equals(req.session.user._id)) {
+            return res.status(402).send({ message: "This is not your recipe to delete!"})
+          }
+
+        const deletedRecipe = await Recipe.findByIdAndDelete(recipeId).populate('user');
+
         if (!deletedRecipe) {
-            return res.status(404).send({ message: "Recipe not found. Please check the ID and try again!" });
+            return res.status(404).send({ message: "Recipe not found!" });
         }
         res.redirect('/recipes');
     } catch (e) {
@@ -98,6 +110,8 @@ router.route('/recipes/edit/:id').get(async function (req, res, next) {
     }
 })
 
+
+
 router.route('/recipes/:id').put(async function (req, res, next) {
     try {
 
@@ -108,8 +122,16 @@ router.route('/recipes/:id').put(async function (req, res, next) {
         if (req.body.ingredients) {
             req.body.ingredients = req.body.ingredients.split(',').map(ingredient => ingredient.trim());
         }
+
         const recipeId = req.params.id;
-        const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, req.body, { new: true });
+        const recipe = await Recipe.findById(recipeId, req.body, { new: true }).populate('user');
+
+        if (!recipe.user._id.equals(req.session.user._id)) {
+            return res.status(402).send({ message: "This is not your recipe to update!"})
+          }
+
+        const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, req.body, { new: true }).populate('user');
+
         if (!updatedRecipe) {
             return res.status(404).send({ message: "Recipe not found. Please check the ID and try again!" });
         }
@@ -118,6 +140,5 @@ router.route('/recipes/:id').put(async function (req, res, next) {
         next(e);
     }
 });
-
 
 export default router;
