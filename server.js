@@ -8,11 +8,23 @@ import errorHandler from './middleware/errorHandler.js';
 import userController from './controllers/userController.js'; 
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-
+import session from 'express-session';
+import dotenv from 'dotenv';
+dotenv.config()
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const app = express();
 
+app.use(session({
+    secret: process.env.SECRET_KEY,
+    resave: false,
+    saveUnitialized: true,
+    cookie: {
+        secure: false,
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24,
+    }
+}))
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());

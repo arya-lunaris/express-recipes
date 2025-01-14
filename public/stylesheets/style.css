@@ -111,15 +111,20 @@ nav .signup {
     margin: 1rem auto;
 }
 
+/* New styling for centering the button */
+.center-button {
+    text-align: center; /* Center the button within the parent container */
+}
+
 .recipe-card a {
     font-size: 1rem; 
     background-color: #3498db;
     color: #fff;
     padding: 0.5rem 1rem;
     border-radius: 4px;
-    text-align: center;
     display: inline-block;
     margin-top: 1rem;
+    text-align: center;
 }
 
 .recipe-card a:hover {

@@ -12,8 +12,17 @@ router.route('/home').get(async function (req, res, next) {
     }
 });
 
+router.route('/error').get(function (req, res) {
+    res.render('error.ejs');
+});
+
 router.route('/recipes').post(async function (req, res, next) {
     try {
+
+        if (!req.session.user) {
+           return res.redirect('/error')
+        }
+
         if (req.body.ingredients) {
             req.body.ingredients = req.body.ingredients.split(',').map(ingredient => ingredient.trim());
         }
@@ -62,7 +71,11 @@ router.route('/recipes/:name').get(async function (req, res, next) {
 
 router.route('/recipes/:id').delete(async function (req, res, next) {
     try {
-        console.log("DELETE request for:", req.params.id);
+
+        if (!req.session.user) {
+            return res.redirect('/error')
+         }
+
         const recipeId = req.params.id;
         const deletedRecipe = await Recipe.findByIdAndDelete(recipeId);
         if (!deletedRecipe) {
@@ -87,6 +100,11 @@ router.route('/recipes/edit/:id').get(async function (req, res, next) {
 
 router.route('/recipes/:id').put(async function (req, res, next) {
     try {
+
+        if (!req.session.user) {
+            return res.redirect('/error')
+         }
+
         if (req.body.ingredients) {
             req.body.ingredients = req.body.ingredients.split(',').map(ingredient => ingredient.trim());
         }

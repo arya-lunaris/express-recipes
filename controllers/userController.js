@@ -50,10 +50,13 @@ router.post('/login', async (req, res, next) => {
         if (!user.isPasswordValid(req.body.password)) {
             return res.status(401).send({ message: "Login unsuccessful" })
         }
+        req.session.user = user;
         res.send({ message: "Login successful!" })
     } catch (e) {
         next(e)
     }
 })
+
+
 
 export default router;
