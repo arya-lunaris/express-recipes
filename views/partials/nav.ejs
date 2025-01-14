@@ -3,12 +3,11 @@
   <a href="/recipes">All Recipes</a>
   <a href="/recipes/new">Create New Recipe</a>
   <% if (!user) { %>
-      <a class="signup" href="/user/signup">Sign Up</a>
-      <a class="login" href="/user/login">Login</a>
-  <% } %> 
-  <% if (user) { %>
-      <a class="logout" href="/user/logout">Log Out</a>
-  <% } %>
+    <a class="signup" href="/user/signup">Sign Up</a>
+    <a class="login" href="/user/login">Login</a>
+    <% } %>
+      <% if (user) { %>
+        <a class="profile" href="/user/profile">Profile</a>
+        <a class="logout" href="/user/logout">Log Out</a>
+        <% } %>
 </nav>
-
- 

@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import path from 'path'; 
 import methodOverride from 'method-override';
 import recipeController from './controllers/recipeController.js';
+import errorController from './controllers/errorController.js';
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import userController from './controllers/userController.js'; 
@@ -39,6 +40,7 @@ app.use(logger);
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', recipeController);
 app.use('/user', userController);
+app.use('/error', errorController);
 app.use(errorHandler);
 
 app.get("/", async (req, res) => {

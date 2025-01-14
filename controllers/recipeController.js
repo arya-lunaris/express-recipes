@@ -1,7 +1,5 @@
 import express from 'express';
 import Recipe from '../models/recipe.js';
-
-
 const router = express.Router();
 
 router.route('/home').get(async function (req, res, next) {
@@ -12,15 +10,11 @@ router.route('/home').get(async function (req, res, next) {
     }
 });
 
-router.route('/error').get(function (req, res) {
-    res.render('error.ejs');
-});
-
 router.route('/recipes').post(async function (req, res, next) {
     try {
 
         if (!req.session.user) {
-           return res.redirect('/error')
+           return res.redirect('/error/loginError')
         }
 
         if (req.body.ingredients) {
@@ -61,7 +55,7 @@ router.route('/recipes/:name').get(async function (req, res, next) {
         const recipeName = { name: req.params.name }
         const recipe = await Recipe.findOne(recipeName);
         if (!recipe) {
-            return res.status(404).send({ message: "Recipe not found. Please check the name and try again!" });
+            return res.redirect('/error/recipeNotFound')
         }
         res.render('recipes/show.ejs', {
             recipe: recipe
@@ -75,23 +69,20 @@ router.route('/recipes/:name').get(async function (req, res, next) {
 router.route('/recipes/:id').delete(async function (req, res, next) {
     try {
 
-        if (!req.session.user) {
-            return res.redirect('/error')
-         }
-
         const recipeId = req.params.id;
         const recipe = await Recipe.findById(recipeId).populate('user');
         
         console.log(recipe, req.session)
         
         if (!recipe.user._id.equals(req.session.user._id)) {
-            return res.status(402).send({ message: "This is not your recipe to delete!"})
+            return res.redirect('/error/deleteRecipeError')
+
           }
 
         const deletedRecipe = await Recipe.findByIdAndDelete(recipeId).populate('user');
 
         if (!deletedRecipe) {
-            return res.status(404).send({ message: "Recipe not found!" });
+            return res.redirect('/error/recipeNotFound')
         }
         res.redirect('/recipes');
     } catch (e) {
@@ -115,10 +106,6 @@ router.route('/recipes/edit/:id').get(async function (req, res, next) {
 router.route('/recipes/:id').put(async function (req, res, next) {
     try {
 
-        if (!req.session.user) {
-            return res.redirect('/error')
-         }
-
         if (req.body.ingredients) {
             req.body.ingredients = req.body.ingredients.split(',').map(ingredient => ingredient.trim());
         }
@@ -127,13 +114,13 @@ router.route('/recipes/:id').put(async function (req, res, next) {
         const recipe = await Recipe.findById(recipeId, req.body, { new: true }).populate('user');
 
         if (!recipe.user._id.equals(req.session.user._id)) {
-            return res.status(402).send({ message: "This is not your recipe to update!"})
+            return res.redirect('/error/updateRecipeError')
           }
 
         const updatedRecipe = await Recipe.findByIdAndUpdate(recipeId, req.body, { new: true }).populate('user');
 
         if (!updatedRecipe) {
-            return res.status(404).send({ message: "Recipe not found. Please check the ID and try again!" });
+            return res.redirect('/error/recipeNotFound')
         }
         res.redirect('/recipes');
     } catch (e) {
