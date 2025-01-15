@@ -14,17 +14,16 @@
 
     <h1>Create a New Recipe!</h1>
 
-    <form action="/recipes" method="POST">
+    <form action="/recipes" method="POST" class="form">
         <label for="name">Name:</label>
-        <input type="text" name="name" id="name" />
-
+        <input type="text" name="name" id="name" class="large-input" />
+    
         <label for="ingredients">Ingredients:</label>
-        <input type="text" name="ingredients" id="ingredients" />
-
+        <input type="text" name="ingredients" id="ingredients" class="large-input" />
+    
         <label for="instructions">Instructions:</label>
-        <input type="text" name="instructions" id="instructions" />
-
-
+        <textarea name="instructions" id="instructions" class="large-textarea"></textarea>
+    
         <button class="action-button" type="submit">Add Recipe</button>
     </form>
 
