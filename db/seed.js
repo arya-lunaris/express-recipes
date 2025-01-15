@@ -20,8 +20,19 @@ async function seed() {
     })
 
     const newRecipes = await Recipe.create(recipes);
-console.log(newRecipes)
+    console.log(newRecipes)
     await mongoose.disconnect();
 }
+
+const newRecipes = await Recipe.create(recipes)
+
+
+const comment = {
+    content: "It's tasty!",
+    user: user
+}
+
+newRecipes[0].comments.push(comment)
+await newRecipes[0].save()
 
 seed();

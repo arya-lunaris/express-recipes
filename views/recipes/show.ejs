@@ -28,6 +28,33 @@
                     <%= recipe.instructions %>
                 </p>
 
+                <div class="comment-section">
+                    <h3 class="comment-title">Comments</h3>
+                    <ul class="comment-list">
+                        <% recipe.comments.forEach(comment => { %>
+                            <li class="comment-item">
+                                <span class="comment-content">
+                                    <%= comment.content %>
+                                </span>
+                                <% if (user && comment.user._id.toString() === user._id.toString()) { %>
+                                    <form action="/recipes/<%= recipe._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST" class="comment-form">
+                                        <button type="submit" class="delete-comment-button">Delete</button>
+                                    </form>
+                                <% } %>
+                            </li>
+                        <% }) %>
+                    </ul>
+                </div>
+
+                <% if (user) { %>
+                    <h3 class="post-comment">Post a Comment</h3>
+                    <form action="/recipes/<%= recipe._id %>/comments" method="POST">
+                        <textarea class="comment-text-area" name="content" rows="3" placeholder="Write a comment..." required></textarea>
+                        <button class="action-button" type="submit">Post Comment</button>
+                    </form>
+                <% } else { %>
+                    <p><a href="/user/login">Log in</a> to post a comment or manage the recipe.</p>
+                <% } %>
 
                 <% if (user) { %>
                     <a href="/recipes/edit/<%=recipe._id%>" class="edit-recipe-button">Edit Recipe</a>
@@ -38,6 +65,7 @@
                         </button>
                     </form>
                 <% } %>
+
             </div>
         </div>
     </div>
@@ -45,4 +73,3 @@
 </body>
 
 </html>
-

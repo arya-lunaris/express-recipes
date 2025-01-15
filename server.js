@@ -7,6 +7,8 @@ import errorController from './controllers/errorController.js';
 import logger from './middleware/logger.js';
 import errorHandler from './middleware/errorHandler.js';
 import userController from './controllers/userController.js'; 
+import commentController from './controllers/commentController.js'; 
+
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 import session from 'express-session';
@@ -41,6 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', recipeController);
 app.use('/user', userController);
 app.use('/error', errorController);
+app.use('/', commentController);
 app.use(errorHandler);
 
 app.get("/", async (req, res) => {
